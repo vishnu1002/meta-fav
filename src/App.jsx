@@ -25,6 +25,12 @@ function App() {
     }
   `;
 
+  // Pre-render both tabs
+  const tabs = [
+    <MetaTab key="meta" />,
+    <FavTab key="fav" />
+  ];
+
   return (
     <CssVarsProvider theme={darkTheme} defaultMode="dark">
       <Box sx={styles.rootBox}>
@@ -49,7 +55,19 @@ function App() {
           </Tabs>
 
           <Box sx={styles.contentBox}>
-            {tabIndex === 0 ? <MetaTab /> : <FavTab />}
+            {/* Use pre-rendered tabs */}
+            <Box sx={{ 
+              display: tabIndex === 0 ? 'block' : 'none',
+              width: '100%'
+            }}>
+              {tabs[0]}
+            </Box>
+            <Box sx={{ 
+              display: tabIndex === 1 ? 'block' : 'none',
+              width: '100%'
+            }}>
+              {tabs[1]}
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -1,3 +1,4 @@
+import { autocompleteClasses } from '@mui/joy';
 import { tabClasses } from '@mui/joy/Tab';
 
 export const styles = {
@@ -15,7 +16,7 @@ export const styles = {
   },
   containerBox: {
     width: '100%',
-    maxWidth: '800px',
+    maxWidth: '900px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
