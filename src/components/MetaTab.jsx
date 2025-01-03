@@ -3,6 +3,7 @@ import { Box, Typography, Input, FormLabel, Button, IconButton, Alert, CircularP
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import GenerateIcon from '../assets/icons/generate.svg'; // Import the SVG
 import { styles } from '../styles';  // Import shared styles
 
 const MetaTab = () => {
@@ -118,6 +119,8 @@ const MetaTab = () => {
             placeholder="https://example.com" 
             error={!!errors.url}
             sx={{ mb: errors.url ? 0.5 : 2 }} 
+            id="url-input"
+            aria-label="URL input"
           />
           {errors.url && (
             <Typography 
@@ -134,8 +137,10 @@ const MetaTab = () => {
             placeholder="less than 60 characters" 
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            id="title-input"
+            aria-label="Title input"
           />
-          <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.500' }}>
+          <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
             {title.length} / 60
           </Typography>
           <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Description</FormLabel>
@@ -144,14 +149,28 @@ const MetaTab = () => {
             placeholder="less than 110 characters" 
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            id="description-input"
+            aria-label="Description input"
           />
-          <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.500' }}>
+          <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
             {description.length} / 110
           </Typography>
           <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Keywords</FormLabel>
-          <Input name="keywords" placeholder="comma separated" sx={{ mb: 2 }} />
+          <Input 
+            name="keywords" 
+            placeholder="comma separated" 
+            sx={{ mb: 2 }} 
+            id="keywords-input"
+            aria-label="Keywords input"
+          />
           <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Author</FormLabel>
-          <Input name="author" placeholder="your name" sx={{ mb: 3 }} />
+          <Input 
+            name="author" 
+            placeholder="your name" 
+            sx={{ mb: 3 }} 
+            id="author-input"
+            aria-label="Author input"
+          />
           <Button 
             type="submit" 
             variant="solid" 
@@ -159,7 +178,10 @@ const MetaTab = () => {
             fullWidth
             loading={loading}
             sx={styles.sharedButton}
+            id="generate-meta-tags-button"
+            aria-label="Generate Meta Tags"
           >
+            <img src={GenerateIcon} alt="Generate" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
             {loading ? 'Generating...' : 'Generate Meta Tags'}
           </Button>
         </form>
@@ -189,6 +211,8 @@ const MetaTab = () => {
               right: '12px',
               zIndex: 2,
             }}
+            id="copy-generated-code-button"
+            aria-label="Copy Code"
           >
             <ContentCopyRoundedIcon />
           </IconButton>
@@ -213,7 +237,7 @@ const MetaTab = () => {
             sx={{
               mt: 2,
               textAlign: 'center',
-              color: 'neutral.500',
+              color: 'neutral.300',
             }}
           >
             Copy the code into your website &lt;head&gt;

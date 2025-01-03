@@ -21,6 +21,7 @@ export const styles = {
     alignItems: 'center',
     mt: 2,
     mx: 'auto',
+    padding: '0 16px',
   },
   title: {
     mb: 4,
@@ -89,6 +90,17 @@ export const styles = {
     '&:hover': {
       transform: 'translateY(-1px)',
       boxShadow: 'sm',
+    },
+  },
+  '@media (max-width: 600px)': {
+    containerBox: {
+      padding: '0 8px',
+    },
+    title: {
+      fontSize: '1.5rem',
+    },
+    tabList: {
+      flexDirection: 'column',
     },
   },
 }; 

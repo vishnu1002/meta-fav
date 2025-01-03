@@ -13,6 +13,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import { styles } from '../styles';  // Import shared styles
+import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
 
 const FAVICON_SIZES = [
   { size: 16, name: 'favicon-16x16.png' },
@@ -418,6 +419,8 @@ const FavTab = () => {
             accept="image/*"
             onChange={handleChange}
             style={{ display: 'none' }}
+            id="file-input"
+            aria-label="File upload input"
           />
           
           <Box sx={{ 
@@ -461,7 +464,10 @@ const FavTab = () => {
           sx={styles.sharedButton}
           disabled={processing}
           startDecorator={processing && <CircularProgress size="sm" />}
+          id="generate-favicons-button"
+          aria-label="Generate Favicons"
         >
+          <img src={GenerateIcon} alt="Generate" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
           {processing ? 'Processing...' : 'Generate Favicons'}
         </Button>
       </form>
@@ -488,6 +494,8 @@ const FavTab = () => {
               startDecorator={<DownloadRoundedIcon />}
               onClick={downloadZip}
               sx={styles.sharedButton}
+              id="download-zip-button"
+              aria-label="Download ZIP of favicons"
             >
               Download ZIP
             </Button>
@@ -497,6 +505,8 @@ const FavTab = () => {
               startDecorator={<CodeRoundedIcon />}
               onClick={scrollToCode}
               sx={styles.sharedButton}
+              id="get-code-button"
+              aria-label="Get code for favicons"
             >
               {showCode ? 'Hide Code' : 'Get Code'}
             </Button>
@@ -523,6 +533,8 @@ const FavTab = () => {
                   right: 8,
                   zIndex: 2,
                 }}
+                id="copy-code-button"
+                aria-label="Copy Code"
               >
                 <ContentCopyRoundedIcon />
               </IconButton>

@@ -65,8 +65,9 @@ function App() {
                 metafav.
               </Typography>
               <IconButton 
+                aria-label="Vishnu1002 Github Repo"
                 component="a" 
-                href="https://github.com/your-repo"
+                href="https://github.com/vishnu1002/meta-fav"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{ color: 'text.primary' }}
