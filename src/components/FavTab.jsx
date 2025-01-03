@@ -402,6 +402,7 @@ const FavTab = () => {
           onDrop={handleDrop}
           onClick={openFileDialog}
           sx={{
+            minHeight: '100px',
             border: '2px dashed',
             borderColor: dragActive ? 'primary.500' : 'neutral.outlinedBorder',
             borderRadius: 'lg',

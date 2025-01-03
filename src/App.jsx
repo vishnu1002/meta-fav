@@ -52,8 +52,8 @@ function App() {
       <CssVarsProvider theme={darkTheme} defaultMode="dark">
         <Box sx={styles.rootBox}>
           <Box sx={styles.containerBox}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mb: 5 }}>
-              <Typography level="h5" sx={{ flexGrow: 1, textAlign: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
+              <Typography level="h5">
                 metafav.
               </Typography>
               <IconButton 
@@ -79,6 +79,9 @@ function App() {
                 <Tab disableIndicator>Favicons</Tab>
               </TabList>
             </Tabs>
+
+            <Typography level='h2'>Boost traffic and visibility</Typography>
+            <Typography level='h2'>with metadata and favicons</Typography>
 
             <Box sx={styles.contentBox}>
               <Box sx={{ display: tabIndex === 0 ? 'block' : 'none', width: '100%' }}>

@@ -93,7 +93,7 @@ const MetaTab = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', p: 2, gap: 4 }}>
+    <Box sx={{ display: 'flex', p: 2, gap: 4, mt: 2}}>
       <Box sx={{ width: '35%', minWidth: '300px' }}>
         <Typography level="h5" sx={{ mb: 2 }}>
           Generate Meta Tags

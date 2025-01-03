@@ -28,7 +28,7 @@ export const styles = {
     textAlign: 'center',
   },
   tabs: {
-    mb: 5,
+    mb: 3,
     bgcolor: 'transparent',
     mx: 'auto',
   },
