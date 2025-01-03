@@ -17,18 +17,11 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 function ErrorFallback({ error }) {
   return (
     <Box sx={{ p: 4, textAlign: 'center' }}>
-      <Alert 
-        color="danger" 
-        variant="soft"
-        sx={{ mb: 2 }}
-      >
+      <Alert color="danger" variant="soft" sx={{ mb: 2 }}>
         Something went wrong:
         <pre style={{ whiteSpace: 'normal' }}>{error.message}</pre>
       </Alert>
-      <Button 
-        onClick={() => window.location.reload()}
-        variant="soft"
-      >
+      <Button onClick={() => window.location.reload()} variant="soft">
         Try again
       </Button>
     </Box>
@@ -49,7 +42,6 @@ function App() {
     }
   `;
 
-  // Pre-render both tabs
   const tabs = [
     <MetaTab key="meta" />,
     <FavTab key="fav" />
@@ -82,26 +74,17 @@ function App() {
               aria-label="Meta-Fav Tabs"
               sx={styles.tabs}
             >
-              <TabList
-                disableUnderline
-                sx={styles.tabList(tabIndex, slideIn)}
-              >
+              <TabList disableUnderline sx={styles.tabList(tabIndex, slideIn)}>
                 <Tab disableIndicator>Meta Tags</Tab>
                 <Tab disableIndicator>Favicons</Tab>
               </TabList>
             </Tabs>
 
             <Box sx={styles.contentBox}>
-              <Box sx={{ 
-                display: tabIndex === 0 ? 'block' : 'none',
-                width: '100%'
-              }}>
+              <Box sx={{ display: tabIndex === 0 ? 'block' : 'none', width: '100%' }}>
                 {tabs[0]}
               </Box>
-              <Box sx={{ 
-                display: tabIndex === 1 ? 'block' : 'none',
-                width: '100%'
-              }}>
+              <Box sx={{ display: tabIndex === 1 ? 'block' : 'none', width: '100%' }}>
                 {tabs[1]}
               </Box>
             </Box>

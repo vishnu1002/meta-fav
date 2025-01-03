@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Box, Typography, Input, FormLabel, Button, IconButton, Alert, CircularProgress, Snackbar } from '@mui/joy';
+import { Box, Typography, Input, FormLabel, Button, IconButton, Alert, Snackbar } from '@mui/joy';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
-import GenerateIcon from '../assets/icons/generate.svg'; // Import the SVG
+import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
 import { styles } from '../styles';  // Import shared styles
 
 const MetaTab = () => {
@@ -13,10 +13,14 @@ const MetaTab = () => {
   const [showCopySuccess, setShowCopySuccess] = useState(false);
   
   // State for character counts
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [formData, setFormData] = useState({
+    url: '',
+    title: '',
+    description: '',
+    keywords: '',
+    author: ''
+  });
 
-  // URL validation
   const isValidUrl = (url) => {
     try {
       new URL(url);
@@ -26,19 +30,12 @@ const MetaTab = () => {
     }
   };
 
-  const sanitizeInput = (input) => {
-    return input
-      .replace(/[<>]/g, '') // Remove HTML tags
-      .trim();
-  };
+  const sanitizeInput = (input) => input.replace(/[<>]/g, '').trim();
 
   const validateForm = (data) => {
     const errors = {};
-    if (!data.url) {
-      errors.url = 'URL is required';
-    } else if (!isValidUrl(data.url)) {
-      errors.url = 'Please enter a valid URL';
-    }
+    if (!data.url) errors.url = 'URL is required';
+    else if (!isValidUrl(data.url)) errors.url = 'Please enter a valid URL';
     if (!data.title) errors.title = 'Title is required';
     if (!data.description) errors.description = 'Description is required';
     return errors;
@@ -48,17 +45,7 @@ const MetaTab = () => {
     event.preventDefault();
     setLoading(true);
     
-    const formData = new FormData(event.target);
-    const data = {
-      url: sanitizeInput(formData.get('url')),
-      title: sanitizeInput(title),
-      description: sanitizeInput(description),
-      keywords: sanitizeInput(formData.get('keywords')),
-      author: sanitizeInput(formData.get('author')),
-    };
-
-    // Validate form
-    const validationErrors = validateForm(data);
+    const validationErrors = validateForm(formData);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setLoading(false);
@@ -66,24 +53,23 @@ const MetaTab = () => {
     }
 
     try {
-      // Generate meta tags
       const generatedTags = `
-<meta name="title" content="${data.title}">
-<meta name="description" content="${data.description}">
-<meta name="keywords" content="${data.keywords}">
-<meta name="author" content="${data.author}">
+<meta name="title" content="${formData.title}">
+<meta name="description" content="${formData.description}">
+<meta name="keywords" content="${formData.keywords}">
+<meta name="author" content="${formData.author}">
 
-<meta property="og:type" content="${data.url}">
-<meta property="og:title" content="${data.title}">
-<meta property="og:description" content="${data.description}">
-<meta property="og:url" content="${data.url}">
-<meta property="og:image" content="${data.url}/.../social-image.png">
+<meta property="og:type" content="${formData.url}">
+<meta property="og:title" content="${formData.title}">
+<meta property="og:description" content="${formData.description}">
+<meta property="og:url" content="${formData.url}">
+<meta property="og:image" content="${formData.url}/.../social-image.png">
 
 <meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:title" content="${data.title}">
-<meta property="twitter:description" content="${data.description}">
-<meta property="twitter:url" content="${data.url}">
-<meta property="twitter:image" content="${data.url}/.../social-image.png">
+<meta property="twitter:title" content="${formData.title}">
+<meta property="twitter:description" content="${formData.description}">
+<meta property="twitter:url" content="${formData.url}">
+<meta property="twitter:image" content="${formData.url}/.../social-image.png">
       `.trim();
 
       setMetaTags(generatedTags);
@@ -121,6 +107,8 @@ const MetaTab = () => {
             sx={{ mb: errors.url ? 0.5 : 2 }} 
             id="url-input"
             aria-label="URL input"
+            value={formData.url}
+            onChange={(e) => setFormData({ ...formData, url: sanitizeInput(e.target.value) })}
           />
           {errors.url && (
             <Typography 
@@ -135,25 +123,25 @@ const MetaTab = () => {
           <Input 
             name="title" 
             placeholder="less than 60 characters" 
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: sanitizeInput(e.target.value) })}
             id="title-input"
             aria-label="Title input"
           />
           <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
-            {title.length} / 60
+            {formData.title.length} / 60
           </Typography>
           <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Description</FormLabel>
           <Input 
             name="description" 
             placeholder="less than 110 characters" 
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: sanitizeInput(e.target.value) })}
             id="description-input"
             aria-label="Description input"
           />
           <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
-            {description.length} / 110
+            {formData.description.length} / 110
           </Typography>
           <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Keywords</FormLabel>
           <Input 
@@ -162,6 +150,8 @@ const MetaTab = () => {
             sx={{ mb: 2 }} 
             id="keywords-input"
             aria-label="Keywords input"
+            value={formData.keywords}
+            onChange={(e) => setFormData({ ...formData, keywords: sanitizeInput(e.target.value) })}
           />
           <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Author</FormLabel>
           <Input 
@@ -170,6 +160,8 @@ const MetaTab = () => {
             sx={{ mb: 3 }} 
             id="author-input"
             aria-label="Author input"
+            value={formData.author}
+            onChange={(e) => setFormData({ ...formData, author: sanitizeInput(e.target.value) })}
           />
           <Button 
             type="submit" 
@@ -259,66 +251,4 @@ const MetaTab = () => {
   );
 };
 
-// Add PropTypes
-MetaTab.propTypes = {
-  // Add if you have props
-};
-
-// Browser compatibility check
-const checkBrowserCompatibility = () => {
-  const features = {
-    clipboard: !!navigator.clipboard,
-    formData: !!window.FormData,
-    modules: 'noModule' in document.createElement('script'),
-  };
-
-  return Object.entries(features).reduce((acc, [key, supported]) => {
-    if (!supported) acc.push(key);
-    return acc;
-  }, []);
-};
-
-// Error Boundary Component
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidMount() {
-    const unsupportedFeatures = checkBrowserCompatibility();
-    if (unsupportedFeatures.length > 0) {
-      console.warn('Unsupported features:', unsupportedFeatures);
-    }
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <Box sx={{ p: 2 }}>
-          <Alert 
-            color="danger" 
-            variant="soft"
-          >
-            Something went wrong. Please try refreshing the page.
-          </Alert>
-        </Box>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
-// Wrap the export with ErrorBoundary
-export default function MetaTabWithErrorBoundary() {
-  return (
-    <ErrorBoundary>
-      <MetaTab />
-    </ErrorBoundary>
-  );
-}
+export default MetaTab;
