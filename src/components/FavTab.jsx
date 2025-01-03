@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Typography, Button, Alert, Grid, CircularProgress, IconButton, Snackbar } from '@mui/joy';
+import { Box, Typography, Button, Snackbar, Grid, CircularProgress, IconButton } from '@mui/joy';
 import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
 import DownloadIcon from '../assets/icons/download.svg'; // Local SVG for Download
 import CodeIcon from '../assets/icons/code.svg'; // Local SVG for Code
@@ -47,6 +47,8 @@ const FavTab = () => {
   const [showCode, setShowCode] = useState(false);
   const codeRef = useRef(null);
   const [showCopySuccess, setShowCopySuccess] = useState(false); // For copy success notification
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // For Snackbar error notification
+  const [copySnackbarOpen, setCopySnackbarOpen] = useState(false); // For Snackbar copy success notification
 
   const openFileDialog = () => {
     inputRef.current.click();
@@ -73,6 +75,7 @@ const FavTab = () => {
       setSelectedFile(file);
     } else {
       setError('Please upload an image file');
+      setSnackbarOpen(true); // Open Snackbar for error
     }
   };
 
@@ -85,13 +88,14 @@ const FavTab = () => {
       setSelectedFile(file);
     } else {
       setError('Please upload an image file');
+      setSnackbarOpen(true); // Open Snackbar for error
     }
   };
 
-  const isValidImageType = (file) => {
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    return validTypes.includes(file.type);
-  };
+  // const isValidImageType = (file) => {
+  //   const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  //   return validTypes.includes(file.type);
+  // };
 
   const processImage = async (file) => {
     setProcessing(true);
@@ -175,7 +179,8 @@ const FavTab = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedFile) {
-      setError('Please select an image file first');
+      setError('Please Upload an Image');
+      setSnackbarOpen(true); // Open Snackbar for error
       return;
     }
     await processImage(selectedFile);
@@ -184,6 +189,7 @@ const FavTab = () => {
   const downloadZip = async () => {
     if (!processedImages) {
       setError('No images to download');
+      setSnackbarOpen(true); // Open Snackbar for error
       return;
     }
 
@@ -250,11 +256,12 @@ const FavTab = () => {
   const copyCode = () => {
     navigator.clipboard.writeText(faviconCode)
       .then(() => {
-        setShowCopySuccess(true);
-        setTimeout(() => setShowCopySuccess(false), 3000);
+        setCopySnackbarOpen(true); // Open Snackbar for copy success
+        setTimeout(() => setCopySnackbarOpen(false), 3000);
       })
       .catch(() => {
         setError('Failed to copy to clipboard');
+        setSnackbarOpen(true); // Open Snackbar for error
       });
   };
 
@@ -387,16 +394,6 @@ const FavTab = () => {
         Generate Favicons
       </Typography>
 
-      {error && (
-        <Alert 
-          color="danger" 
-          sx={{ mb: 2 }}
-          onClose={() => setError('')}
-        >
-          {error}
-        </Alert>
-      )}
-
       <form onSubmit={handleSubmit}>
         <Box
           onDragEnter={handleDrag}
@@ -435,12 +432,6 @@ const FavTab = () => {
             flexDirection: 'column', 
             alignItems: 'center',
             gap: 2,
-            animation: dragActive ? 'pulse 1.5s infinite' : 'none',
-            '@keyframes pulse': {
-              '0%': { transform: 'scale(1)' },
-              '50%': { transform: 'scale(1.05)' },
-              '100%': { transform: 'scale(1)' },
-            },
           }}>
             {selectedFile ? (
               <>
@@ -451,7 +442,7 @@ const FavTab = () => {
               </>
             ) : (
               <>
-                <img src={UploadIcon} alt="Upload" style={{ width: '48px', height: '48px', color: 'red'}} />
+                <img src={UploadIcon} alt="Upload" style={{ width: '48px', height: '48px' }} />
                 <Typography level="body-md">
                   Drag and drop your image here or click to browse
                 </Typography>
@@ -563,12 +554,23 @@ const FavTab = () => {
         </Box>
       )}
       
-      {/* Success Notification */}
+      {/* Snackbar for error messages */}
+      <Snackbar
+        variant="soft"
+        color="danger"
+        open={snackbarOpen}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        {error}
+      </Snackbar>
+
+      {/* Snackbar for copy success */}
       <Snackbar
         variant="soft"
         color="success"
-        open={showCopySuccess}
-        onClose={() => setShowCopySuccess(false)}
+        open={copySnackbarOpen}
+        onClose={() => setCopySnackbarOpen(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         Code copied to clipboard!
