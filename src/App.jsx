@@ -62,7 +62,6 @@ function App() {
                 href="https://github.com/vishnu1002/meta-fav"
                 target="_blank"
                 rel="noopener noreferrer"
-                sx={{ color: 'text.primary' }}
               >
                 <img src={GitHubIcon} alt="GitHub" style={{ width: '24px', height: '24px' }} />
               </IconButton>
