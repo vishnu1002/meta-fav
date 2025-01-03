@@ -10,14 +10,38 @@ import MetaTab from './components/MetaTab';
 import FavTab from './components/FavTab';
 import darkTheme from './theme';
 import { styles } from './styles';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Alert, Button, IconButton } from '@mui/joy';
+import GitHubIcon from '@mui/icons-material/GitHub';
+
+function ErrorFallback({ error }) {
+  return (
+    <Box sx={{ p: 4, textAlign: 'center' }}>
+      <Alert 
+        color="danger" 
+        variant="soft"
+        sx={{ mb: 2 }}
+      >
+        Something went wrong:
+        <pre style={{ whiteSpace: 'normal' }}>{error.message}</pre>
+      </Alert>
+      <Button 
+        onClick={() => window.location.reload()}
+        variant="soft"
+      >
+        Try again
+      </Button>
+    </Box>
+  );
+}
 
 function App() {
   const [tabIndex, setTabIndex] = useState(0);
 
   const slideIn = keyframes`
     from {
-      transform: translateX(${tabIndex === 0 ? '-100%' : '100%'});
-      opacity: 0.5;
+      transform: translateX(${tabIndex === 0 ? '-20px' : '20px'});
+      opacity: 0;
     }
     to {
       transform: translateX(0);
@@ -32,46 +56,58 @@ function App() {
   ];
 
   return (
-    <CssVarsProvider theme={darkTheme} defaultMode="dark">
-      <Box sx={styles.rootBox}>
-        <Box sx={styles.containerBox}>
-          <Typography level="h4" sx={styles.title}>
-            metafav.
-          </Typography>
-
-          <Tabs
-            value={tabIndex}
-            onChange={(event, newValue) => setTabIndex(newValue)}
-            aria-label="Meta-Fav Tabs"
-            sx={styles.tabs}
-          >
-            <TabList
-              disableUnderline
-              sx={styles.tabList(tabIndex, slideIn)}
-            >
-              <Tab disableIndicator>Meta tags</Tab>
-              <Tab disableIndicator>Fav icons</Tab>
-            </TabList>
-          </Tabs>
-
-          <Box sx={styles.contentBox}>
-            {/* Use pre-rendered tabs */}
-            <Box sx={{ 
-              display: tabIndex === 0 ? 'block' : 'none',
-              width: '100%'
-            }}>
-              {tabs[0]}
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <CssVarsProvider theme={darkTheme} defaultMode="dark">
+        <Box sx={styles.rootBox}>
+          <Box sx={styles.containerBox}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', mb: 5 }}>
+              <Typography level="h5" sx={{ flexGrow: 1, textAlign: 'center' }}>
+                metafav.
+              </Typography>
+              <IconButton 
+                component="a" 
+                href="https://github.com/your-repo"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ color: 'text.primary' }}
+              >
+                <GitHubIcon />
+              </IconButton>
             </Box>
-            <Box sx={{ 
-              display: tabIndex === 1 ? 'block' : 'none',
-              width: '100%'
-            }}>
-              {tabs[1]}
+
+            <Tabs
+              value={tabIndex}
+              onChange={(event, newValue) => setTabIndex(newValue)}
+              aria-label="Meta-Fav Tabs"
+              sx={styles.tabs}
+            >
+              <TabList
+                disableUnderline
+                sx={styles.tabList(tabIndex, slideIn)}
+              >
+                <Tab disableIndicator>Meta Tags</Tab>
+                <Tab disableIndicator>Favicons</Tab>
+              </TabList>
+            </Tabs>
+
+            <Box sx={styles.contentBox}>
+              <Box sx={{ 
+                display: tabIndex === 0 ? 'block' : 'none',
+                width: '100%'
+              }}>
+                {tabs[0]}
+              </Box>
+              <Box sx={{ 
+                display: tabIndex === 1 ? 'block' : 'none',
+                width: '100%'
+              }}>
+                {tabs[1]}
+              </Box>
             </Box>
           </Box>
         </Box>
-      </Box>
-    </CssVarsProvider>
+      </CssVarsProvider>
+    </ErrorBoundary>
   );
 }
 

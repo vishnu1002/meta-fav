@@ -2,6 +2,36 @@
 import { extendTheme } from '@mui/joy/styles';
 
 const darkTheme = extendTheme({
+  fontFamily: {
+    body: '"Google Sans"',
+    display: '"Google Sans"',
+  },
+  typography: {
+    h1: {
+      fontFamily: '"Google Sans"',
+    },
+    h2: {
+      fontFamily: '"Google Sans"',
+    },
+    h3: {
+      fontFamily: '"Google Sans"',
+    },
+    h4: {
+      fontFamily: '"Google Sans"',
+    },
+    h5: {
+      fontFamily: '"Google Sans"',
+    },
+    h6: {
+      fontFamily: '"Google Sans"',
+    },
+    body1: {
+      fontFamily: '"Google Sans"',
+    },
+    body2: {
+      fontFamily: '"Google Sans"',
+    },
+  },
   colorSchemes: {
     dark: {
       palette: {

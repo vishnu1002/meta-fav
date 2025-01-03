@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Typography, Button, Alert, Grid, CircularProgress, IconButton } from '@mui/joy';
+import { Box, Typography, Button, Alert, Grid, CircularProgress, IconButton, Snackbar } from '@mui/joy';
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
@@ -7,6 +7,12 @@ import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import imageCompression from 'browser-image-compression';
+import browserconfig from '../assets/user-config/browserconfig.xml?raw';
+import manifest from '../assets/user-config/manifest.json?raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import { styles } from '../styles';  // Import shared styles
 
 const FAVICON_SIZES = [
   { size: 16, name: 'favicon-16x16.png' },
@@ -38,6 +44,9 @@ const FavTab = () => {
   const [processedImages, setProcessedImages] = useState(null);
   const [processing, setProcessing] = useState(false);
   const inputRef = useRef(null);
+  const [showCode, setShowCode] = useState(false);
+  const codeRef = useRef(null);
+  const [showCopySuccess, setShowCopySuccess] = useState(false); // For copy success notification
 
   const openFileDialog = () => {
     inputRef.current.click();
@@ -79,6 +88,11 @@ const FavTab = () => {
     }
   };
 
+  const isValidImageType = (file) => {
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    return validTypes.includes(file.type);
+  };
+
   const processImage = async (file) => {
     setProcessing(true);
     try {
@@ -100,8 +114,9 @@ const FavTab = () => {
         img.src = URL.createObjectURL(file);
 
         // Wait for image to load
-        await new Promise((resolve) => {
+        await new Promise((resolve, reject) => {
           img.onload = resolve;
+          img.onerror = () => reject(new Error('Failed to load image'));
         });
 
         // Draw and resize image
@@ -149,6 +164,7 @@ const FavTab = () => {
       }
 
       setProcessedImages(images);
+      setError(''); // Clear any previous errors
     } catch (err) {
       setError('Error processing image');
       console.error(err);
@@ -168,15 +184,24 @@ const FavTab = () => {
   const downloadZip = async () => {
     const zip = new JSZip();
     
+    // Add favicon images
     processedImages.favicons.forEach(img => {
       zip.file(img.name, img.blob);
     });
+    
+    // Add Apple touch icons
     processedImages.appleIcons.forEach(img => {
       zip.file(img.name, img.blob);
     });
+    
+    // Add Android icons
     processedImages.androidIcons.forEach(img => {
       zip.file(img.name, img.blob);
     });
+
+    // Add configuration files
+    zip.file('browserconfig.xml', browserconfig);
+    zip.file('manifest.json', manifest);
 
     const content = await zip.generateAsync({ type: 'blob' });
     saveAs(content, 'favicons.zip');
@@ -184,6 +209,57 @@ const FavTab = () => {
 
   const downloadSingleImage = (blob, filename) => {
     saveAs(blob, filename);
+  };
+
+  const faviconCode = `
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+
+<link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png"> <!-- Home screen shortcut -->
+<link rel="icon" type="image/png" sizes="512x512" href="/android-icon-512x512.png"> <!-- Splash screen (PWAs) -->
+
+<link rel="manifest" href="/manifest.json"> <!-- PWA manifest -->
+<link rel="mask-icon" href="/icon.svg" color="#5bbad5"> <!-- Safari pinned tab icon -->
+
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff"> <!-- Browser theme color -->
+
+<!-- Paste the Generated Meta Tags -->
+`;
+  const copyCode = () => {
+    navigator.clipboard.writeText(faviconCode)
+      .then(() => {
+        setShowCopySuccess(true);
+        setTimeout(() => setShowCopySuccess(false), 3000);
+      })
+      .catch(() => {
+        setError('Failed to copy to clipboard');
+      });
+  };
+
+  const scrollToCode = () => {
+    setShowCode(!showCode);
+    setTimeout(() => {
+      if (!showCode && codeRef.current) {
+        codeRef.current.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+    }, 100);
   };
 
   const ImagePreviewSection = ({ title, images }) => (
@@ -360,7 +436,7 @@ const FavTab = () => {
               <>
                 <ImageRoundedIcon sx={{ fontSize: 48, color: 'primary.500' }} />
                 <Typography level="body-md">
-                  Selected: {selectedFile.name}
+                  {selectedFile.name}
                 </Typography>
               </>
             ) : (
@@ -382,7 +458,7 @@ const FavTab = () => {
           variant="solid" 
           color="primary" 
           fullWidth
-          size="lg"
+          sx={styles.sharedButton}
           disabled={processing}
           startDecorator={processing && <CircularProgress size="sm" />}
         >
@@ -396,6 +472,10 @@ const FavTab = () => {
           <ImagePreviewSection title="Apple Touch Icons" images={processedImages.appleIcons} />
           <ImagePreviewSection title="Android Icons" images={processedImages.androidIcons} />
 
+          <Typography sx={{textAlign: 'center'}} >
+            Please ensure you edit the manifest.json file to match your website's specific requirements
+          </Typography>
+
           <Box sx={{ 
             display: 'flex', 
             gap: 2, 
@@ -407,6 +487,7 @@ const FavTab = () => {
               color="primary"
               startDecorator={<DownloadRoundedIcon />}
               onClick={downloadZip}
+              sx={styles.sharedButton}
             >
               Download ZIP
             </Button>
@@ -414,12 +495,65 @@ const FavTab = () => {
               variant="outlined"
               color="neutral"
               startDecorator={<CodeRoundedIcon />}
+              onClick={scrollToCode}
+              sx={styles.sharedButton}
             >
-              Get Code
+              {showCode ? 'Hide Code' : 'Get Code'}
             </Button>
           </Box>
+
+          {showCode && (
+            <Box 
+              ref={codeRef}
+              sx={{ 
+                mt: 4, 
+                position: 'relative',
+                maxWidth: '800px',
+                mx: 'auto'
+              }}
+            >
+              <IconButton
+                size="sm"
+                variant="soft"
+                color="primary"
+                onClick={copyCode}
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  zIndex: 2,
+                }}
+              >
+                <ContentCopyRoundedIcon />
+              </IconButton>
+              <SyntaxHighlighter
+                language="html"
+                style={vscDarkPlus}
+                customStyle={{
+                  margin: 0,
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  lineHeight: '1.5',
+                  backgroundColor: 'var(--joy-palette-background-level1)',
+                }}
+              >
+                {faviconCode}
+              </SyntaxHighlighter>
+            </Box>
+          )}
         </Box>
       )}
+      
+      {/* Success Notification */}
+      <Snackbar
+        variant="soft"
+        color="success"
+        open={showCopySuccess}
+        onClose={() => setShowCopySuccess(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        Code copied to clipboard!
+      </Snackbar>
     </Box>
   );
 };
