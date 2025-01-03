@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Box, Typography, Input, FormLabel, Button, IconButton, Alert, Snackbar } from '@mui/joy';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
+import CopyIcon from '../assets/icons/copy.svg'; // Local SVG for Copy
 import { styles } from '../styles';  // Import shared styles
 
 const MetaTab = () => {
@@ -206,7 +206,7 @@ const MetaTab = () => {
             id="copy-generated-code-button"
             aria-label="Copy Code"
           >
-            <ContentCopyRoundedIcon />
+            <img src={CopyIcon} alt="Copy" style={{ width: '20px', height: '20px' }} />
           </IconButton>
 
           <SyntaxHighlighter

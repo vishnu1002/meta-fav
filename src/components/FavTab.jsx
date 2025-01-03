@@ -2,18 +2,17 @@ import React, { useState, useRef } from 'react';
 import { Box, Typography, Button, Alert, Grid, CircularProgress, IconButton, Snackbar } from '@mui/joy';
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-import imageCompression from 'browser-image-compression';
-import browserconfig from '../assets/user-config/browserconfig.xml?raw';
-import manifest from '../assets/user-config/manifest.json?raw';
+import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
+import DownloadIcon from '../assets/icons/download.svg'; // Local SVG for Download
+import CodeIcon from '../assets/icons/code.svg'; // Local SVG for Code
+import CopyIcon from '../assets/icons/copy.svg'; // Local SVG for Copy
+import { styles } from '../styles';  // Import shared styles
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
-import { styles } from '../styles';  // Import shared styles
-import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
+import browserconfig from '../assets/user-config/browserconfig.xml?raw';
+import manifest from '../assets/user-config/manifest.json?raw';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 const FAVICON_SIZES = [
   { size: 16, name: 'favicon-16x16.png' },
@@ -183,29 +182,37 @@ const FavTab = () => {
   };
 
   const downloadZip = async () => {
+    if (!processedImages) {
+      setError('No images to download');
+      return;
+    }
+
     const zip = new JSZip();
-    
-    // Add favicon images
-    processedImages.favicons.forEach(img => {
-      zip.file(img.name, img.blob);
+
+    // Add each image to the zip directly without a folder
+    processedImages.favicons.forEach((image) => {
+      zip.file(image.name, image.blob);
     });
-    
+
     // Add Apple touch icons
-    processedImages.appleIcons.forEach(img => {
-      zip.file(img.name, img.blob);
+    processedImages.appleIcons.forEach((image) => {
+      zip.file(image.name, image.blob);
     });
-    
+
     // Add Android icons
-    processedImages.androidIcons.forEach(img => {
-      zip.file(img.name, img.blob);
+    processedImages.androidIcons.forEach((image) => {
+      zip.file(image.name, image.blob);
     });
 
     // Add configuration files
     zip.file('browserconfig.xml', browserconfig);
     zip.file('manifest.json', manifest);
 
-    const content = await zip.generateAsync({ type: 'blob' });
-    saveAs(content, 'favicons.zip');
+    // Generate the zip file
+    const content = await zip.generateAsync({ type: "blob" });
+    
+    // Use FileSaver to save the zip file
+    saveAs(content, "favicons.zip");
   };
 
   const downloadSingleImage = (blob, filename) => {
@@ -334,7 +341,7 @@ const FavTab = () => {
                 }}
                 onClick={() => downloadSingleImage(img.blob, img.name)}
               >
-                <DownloadRoundedIcon />
+                <img src={DownloadIcon} alt="Download" style={{ width: '20px', height: '20px' }} />
               </IconButton>
 
               <Box 
@@ -491,7 +498,7 @@ const FavTab = () => {
             <Button
               variant="solid"
               color="primary"
-              startDecorator={<DownloadRoundedIcon />}
+              startDecorator={<img src={DownloadIcon} alt="Download" style={{ width: '20px', height: '20px' }} />}
               onClick={downloadZip}
               sx={styles.sharedButton}
               id="download-zip-button"
@@ -502,7 +509,7 @@ const FavTab = () => {
             <Button
               variant="outlined"
               color="neutral"
-              startDecorator={<CodeRoundedIcon />}
+              startDecorator={<img src={CodeIcon} alt="Get Code" style={{ width: '20px', height: '20px' }} />}
               onClick={scrollToCode}
               sx={styles.sharedButton}
               id="get-code-button"
@@ -536,7 +543,7 @@ const FavTab = () => {
                 id="copy-code-button"
                 aria-label="Copy Code"
               >
-                <ContentCopyRoundedIcon />
+                <img src={CopyIcon} alt="Copy" style={{ width: '20px', height: '20px' }} />
               </IconButton>
               <SyntaxHighlighter
                 language="html"

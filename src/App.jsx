@@ -12,7 +12,7 @@ import darkTheme from './theme';
 import { styles } from './styles';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Alert, Button, IconButton } from '@mui/joy';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import GitHubIcon from './assets/icons/github.svg';
 
 function ErrorFallback({ error }) {
   return (
@@ -64,7 +64,7 @@ function App() {
                 rel="noopener noreferrer"
                 sx={{ color: 'text.primary' }}
               >
-                <GitHubIcon />
+                <img src={GitHubIcon} alt="GitHub" style={{ width: '24px', height: '24px' }} />
               </IconButton>
             </Box>
 
