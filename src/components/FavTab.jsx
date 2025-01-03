@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Box, Typography, Button, Alert, Grid, CircularProgress, IconButton, Snackbar } from '@mui/joy';
-import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
-import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
 import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
 import DownloadIcon from '../assets/icons/download.svg'; // Local SVG for Download
 import CodeIcon from '../assets/icons/code.svg'; // Local SVG for Code
 import CopyIcon from '../assets/icons/copy.svg'; // Local SVG for Copy
+import UploadIcon from '../assets/icons/upload.svg'; // Local SVG for Upload
+import ImageIcon from '../assets/icons/image.svg'; // Local SVG for Image
 import { styles } from '../styles';  // Import shared styles
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -444,14 +444,14 @@ const FavTab = () => {
           }}>
             {selectedFile ? (
               <>
-                <ImageRoundedIcon sx={{ fontSize: 48, color: 'primary.500' }} />
+                <img src={ImageIcon} alt="Image" style={{ width: '48px', height: '48px' }} />
                 <Typography level="body-md">
                   {selectedFile.name}
                 </Typography>
               </>
             ) : (
               <>
-                <FileUploadRoundedIcon sx={{ fontSize: 48, color: 'neutral.500' }} />
+                <img src={UploadIcon} alt="Upload" style={{ width: '48px', height: '48px', color: 'red'}} />
                 <Typography level="body-md">
                   Drag and drop your image here or click to browse
                 </Typography>

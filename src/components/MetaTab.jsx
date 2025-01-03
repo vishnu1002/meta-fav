@@ -99,7 +99,7 @@ const MetaTab = () => {
           Generate Meta Tags
         </Typography>
         <form onSubmit={handleGenerate}>
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >URL</FormLabel>
+          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="url-input">URL</FormLabel>
           <Input 
             name="url" 
             placeholder="https://example.com" 
@@ -119,7 +119,7 @@ const MetaTab = () => {
               {errors.url}
             </Typography>
           )}
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Title</FormLabel>
+          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="title-input">Title</FormLabel>
           <Input 
             name="title" 
             placeholder="less than 60 characters" 
@@ -131,7 +131,7 @@ const MetaTab = () => {
           <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
             {formData.title.length} / 60
           </Typography>
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Description</FormLabel>
+          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="description-input">Description</FormLabel>
           <Input 
             name="description" 
             placeholder="less than 110 characters" 
@@ -143,7 +143,7 @@ const MetaTab = () => {
           <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
             {formData.description.length} / 110
           </Typography>
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Keywords</FormLabel>
+          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="keywords-input">Keywords</FormLabel>
           <Input 
             name="keywords" 
             placeholder="comma separated" 
@@ -153,7 +153,7 @@ const MetaTab = () => {
             value={formData.keywords}
             onChange={(e) => setFormData({ ...formData, keywords: sanitizeInput(e.target.value) })}
           />
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} >Author</FormLabel>
+          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="author-input">Author</FormLabel>
           <Input 
             name="author" 
             placeholder="your name" 
