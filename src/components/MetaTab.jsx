@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { Box, Typography, Input, FormLabel, Button, IconButton, Snackbar, Textarea } from '@mui/joy';
+import { styles } from '../styles';
 import GenerateIcon from '../assets/icons/generate.svg';
 import CopyIcon from '../assets/icons/copy.svg';
-import { styles } from '../styles';
 
 const MetaTab = () => {
   const [metaTags, setMetaTags] = useState('');

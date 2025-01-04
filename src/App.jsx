@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
+import { CssVarsProvider, Box, Typography, IconButton, Alert, Button } from '@mui/joy';
 import Tabs from '@mui/joy/Tabs';
-import TabList from '@mui/joy/TabList';
 import Tab from '@mui/joy/Tab';
-import Box from '@mui/joy/Box';
-import Typography from '@mui/joy/Typography';
+import TabList from '@mui/joy/TabList';
 import { keyframes } from '@mui/system';
 import MetaTab from './components/MetaTab';
 import FavTab from './components/FavTab';
 import darkTheme from './theme';
 import { styles } from './styles';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Alert, Button, IconButton } from '@mui/joy';
 import GitHubIcon from './assets/icons/github.svg';
 
 function ErrorFallback({ error }) {
