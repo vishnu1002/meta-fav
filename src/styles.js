@@ -1,5 +1,17 @@
-import { autocompleteClasses } from '@mui/joy';
 import { tabClasses } from '@mui/joy/Tab';
+
+const sharedButtonStyles = {
+  height: '42px',
+  fontSize: 'sm',
+  fontWeight: 600,
+  px: 3,
+  borderRadius: 'lg',
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    transform: 'translateY(-1px)',
+    boxShadow: 'sm',
+  },
+};
 
 export const styles = {
   rootBox: {
@@ -80,18 +92,7 @@ export const styles = {
     width: '100%',
     mx: 'auto',
   },
-  sharedButton: {
-    height: '42px',
-    fontSize: 'sm',
-    fontWeight: 600,
-    px: 3,
-    borderRadius: 'lg',
-    transition: 'all 0.2s ease',
-    '&:hover': {
-      transform: 'translateY(-1px)',
-      boxShadow: 'sm',
-    },
-  },
+  sharedButton: sharedButtonStyles,
   '@media (max-width: 600px)': {
     containerBox: {
       padding: '0 8px',
