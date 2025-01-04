@@ -27,7 +27,7 @@ const MetaTab = () => {
     }
   };
 
-  const sanitizeInput = (input) => input.replace(/[<>]/g, '').trim();
+  const sanitizeInput = (input) => input.replace(/[<>]/g, '');
 
   const validateForm = (data) => {
     const errors = {};
@@ -60,13 +60,13 @@ const MetaTab = () => {
 <meta property="og:title" content="${formData.title}">
 <meta property="og:description" content="${formData.description}">
 <meta property="og:url" content="${formData.url}">
-<meta property="og:image" content="${formData.url}/.../social-image.png">
+<meta property="og:image" content="${formData.url}.../social-image.png">
 
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:title" content="${formData.title}">
 <meta property="twitter:description" content="${formData.description}">
 <meta property="twitter:url" content="${formData.url}">
-<meta property="twitter:image" content="${formData.url}/.../social-image.png">
+<meta property="twitter:image" content="${formData.url}.../social-image.png">
       `.trim();
 
       setMetaTags(generatedTags);

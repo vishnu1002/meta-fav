@@ -77,8 +77,8 @@ function App() {
               </TabList>
             </Tabs>
 
-            <Typography sx={{fontSize: '20px', color: 'neutral.300'}}>Boost traffic and visibility with metadata and favicons</Typography>
-            {/* <Typography sx={{fontSize: '30px', color: 'neutral.300'}}></Typography> */}
+            <Typography sx={{fontSize: '25px', color: 'neutral.300'}}>Boost traffic and visibility</Typography>
+            <Typography sx={{fontSize: '25px', color: 'neutral.300'}}>with metadata and favicons</Typography>
 
             <Box sx={styles.contentBox}>
               <Box sx={{ display: tabIndex === 0 ? 'block' : 'none', width: '100%' }}>
