@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Typography, Input, FormLabel, Button, IconButton, Alert, Snackbar } from '@mui/joy';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import React, { useState, useCallback } from 'react';
+import { Box, Typography, Input, FormLabel, Button, IconButton, Snackbar, Textarea } from '@mui/joy';
 import GenerateIcon from '../assets/icons/generate.svg';
 import CopyIcon from '../assets/icons/copy.svg';
 import { styles } from '../styles';
@@ -11,8 +9,7 @@ const MetaTab = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showCopySuccess, setShowCopySuccess] = useState(false);
-  
-  // State for character counts
+
   const [formData, setFormData] = useState({
     url: '',
     title: '',
@@ -44,7 +41,7 @@ const MetaTab = () => {
   const handleGenerate = async (event) => {
     event.preventDefault();
     setLoading(true);
-    
+
     const validationErrors = validateForm(formData);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -81,7 +78,7 @@ const MetaTab = () => {
     }
   };
 
-  const handleCopy = () => {
+  const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(metaTags)
       .then(() => {
         setShowCopySuccess(true);
@@ -90,16 +87,16 @@ const MetaTab = () => {
       .catch(() => {
         setErrors({ copy: 'Failed to copy to clipboard' });
       });
-  };
+  }, [metaTags]);
 
   return (
-    <Box sx={{ display: 'flex', p: 2, gap: 4, mt: 2}}>
+    <Box sx={{ display: 'flex', p: 2, gap: 4, mt: 2 }}>
       <Box sx={{ width: '35%', minWidth: '300px' }}>
         <Typography level="h5" sx={{ mb: 2 }}>
           Generate Meta Tags
         </Typography>
         <form onSubmit={handleGenerate}>
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="url-input">URL</FormLabel>
+          <FormLabel sx={{ color: 'neutral.300', mb: 0.5 }} htmlFor="url-input">URL</FormLabel>
           <Input 
             name="url" 
             placeholder="https://example.com" 
@@ -119,7 +116,7 @@ const MetaTab = () => {
               {errors.url}
             </Typography>
           )}
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="title-input">Title</FormLabel>
+          <FormLabel sx={{ color: 'neutral.300', mb: 0.5 }} htmlFor="title-input">Title</FormLabel>
           <Input 
             name="title" 
             placeholder="less than 60 characters" 
@@ -131,7 +128,7 @@ const MetaTab = () => {
           <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
             {formData.title.length} / 60
           </Typography>
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="description-input">Description</FormLabel>
+          <FormLabel sx={{ color: 'neutral.300', mb: 0.5 }} htmlFor="description-input">Description</FormLabel>
           <Input 
             name="description" 
             placeholder="less than 110 characters" 
@@ -143,7 +140,7 @@ const MetaTab = () => {
           <Typography level="body-xs" sx={{ textAlign: 'right', color: 'neutral.300' }}>
             {formData.description.length} / 110
           </Typography>
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="keywords-input">Keywords</FormLabel>
+          <FormLabel sx={{ color: 'neutral.300', mb: 0.5 }} htmlFor="keywords-input">Keywords</FormLabel>
           <Input 
             name="keywords" 
             placeholder="comma separated" 
@@ -153,7 +150,7 @@ const MetaTab = () => {
             value={formData.keywords}
             onChange={(e) => setFormData({ ...formData, keywords: sanitizeInput(e.target.value) })}
           />
-          <FormLabel sx={{color: 'neutral.300', mb: 0.5}} htmlFor="author-input">Author</FormLabel>
+          <FormLabel sx={{ color: 'neutral.300', mb: 0.5 }} htmlFor="author-input">Author</FormLabel>
           <Input 
             name="author" 
             placeholder="your name" 
@@ -209,21 +206,20 @@ const MetaTab = () => {
             <img src={CopyIcon} alt="Copy" style={{ width: '20px', height: '20px' }} />
           </IconButton>
 
-          <SyntaxHighlighter
-            language="html"
-            style={vscDarkPlus}
-            customStyle={{
+          <Textarea
+            className="lang-html"
+            readOnly
+            value={metaTags || '<!-- Generated meta tags will appear here -->'}
+            sx={{
               margin: 0,
-              borderRadius: '8px',
+              borderStyle: 'none',
               width: '100%',
-              maxHeight: '380px',
-              backgroundColor: 'transparent',
+              height: 'auto',
               fontSize: '14px',
               lineHeight: '1.5',
+              color: 'primary.300',
             }}
-          >
-            {metaTags || '<!-- Generated meta tags will appear here -->'}
-          </SyntaxHighlighter>
+          />
           <Typography 
             level="body-sm"
             sx={{
@@ -243,7 +239,7 @@ const MetaTab = () => {
         color="success"
         open={showCopySuccess}
         onClose={() => setShowCopySuccess(false)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         Code copied to clipboard!
       </Snackbar>

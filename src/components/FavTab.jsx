@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Box, Typography, Button, Snackbar, Grid, CircularProgress, IconButton } from '@mui/joy';
+import { Box, Typography, Button, Snackbar, Grid, CircularProgress, IconButton, Textarea } from '@mui/joy';
 import GenerateIcon from '../assets/icons/generate.svg'; // Local SVG for Generate
 import DownloadIcon from '../assets/icons/download.svg'; // Local SVG for Download
 import CodeIcon from '../assets/icons/code.svg'; // Local SVG for Code
@@ -7,8 +7,6 @@ import CopyIcon from '../assets/icons/copy.svg'; // Local SVG for Copy
 import UploadIcon from '../assets/icons/upload.svg'; // Local SVG for Upload
 import ImageIcon from '../assets/icons/image.svg'; // Local SVG for Image
 import { styles } from '../styles';  // Import shared styles
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import browserconfig from '../assets/user-config/browserconfig.xml?raw';
 import manifest from '../assets/user-config/manifest.json?raw';
 import JSZip from 'jszip';
@@ -91,11 +89,6 @@ const FavTab = () => {
       setSnackbarOpen(true); // Open Snackbar for error
     }
   };
-
-  // const isValidImageType = (file) => {
-  //   const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  //   return validTypes.includes(file.type);
-  // };
 
   const processImage = async (file) => {
     setProcessing(true);
@@ -537,19 +530,20 @@ const FavTab = () => {
               >
                 <img src={CopyIcon} alt="Copy" style={{ width: '20px', height: '20px' }} />
               </IconButton>
-              <SyntaxHighlighter
-                language="html"
-                style={vscDarkPlus}
-                customStyle={{
+              <Textarea
+                className="lang-html"
+                readOnly
+                value={faviconCode}
+                sx={{
                   margin: 0,
-                  borderRadius: '8px',
+                  borderStyle: 'none',
+                  width: '100%',
+                  height: 'auto',
                   fontSize: '14px',
                   lineHeight: '1.5',
-                  backgroundColor: 'var(--joy-palette-background-level1)',
+                  color: 'primary.300',
                 }}
-              >
-                {faviconCode}
-              </SyntaxHighlighter>
+              />
             </Box>
           )}
         </Box>
