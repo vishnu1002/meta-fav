@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Box, Typography, Button, Snackbar, Grid, CircularProgress, IconButton, Textarea } from '@mui/joy';
 import GenerateIcon from '../assets/icons/generate.svg';
 import DownloadIcon from '../assets/icons/download.svg';
@@ -380,6 +380,16 @@ const FavTab = () => {
       </Grid>
     </Box>
   );
+
+  useEffect(() => {
+    return () => {
+      if (processedImages) {
+        processedImages.favicons.forEach(img => URL.revokeObjectURL(img.url));
+        processedImages.appleIcons.forEach(img => URL.revokeObjectURL(img.url));
+        processedImages.androidIcons.forEach(img => URL.revokeObjectURL(img.url));
+      }
+    };
+  }, [processedImages]);
 
   return (
     <Box sx={{ p: 2 }}>

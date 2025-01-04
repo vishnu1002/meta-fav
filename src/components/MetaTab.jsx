@@ -207,6 +207,9 @@ const MetaTab = () => {
           </IconButton>
 
           <Textarea
+            aria-label='Meta Gen Code'
+            id='meta-gen-code'
+            name='meta-gen-code'
             className="lang-html"
             readOnly
             value={metaTags || '<!-- Generated meta tags will appear here -->'}
@@ -218,9 +221,10 @@ const MetaTab = () => {
               fontSize: '14px',
               lineHeight: '1.5',
               color: 'primary.300',
+              bgcolor: 'transparent',
             }}
           />
-          <Typography 
+          <Typography
             level="body-sm"
             sx={{
               mt: 2,

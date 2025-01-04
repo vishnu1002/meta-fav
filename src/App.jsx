@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { CssVarsProvider, Box, Typography, IconButton, Alert, Button } from '@mui/joy';
 import Tabs from '@mui/joy/Tabs';
 import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import { keyframes } from '@mui/system';
-import MetaTab from './components/MetaTab';
-import FavTab from './components/FavTab';
 import darkTheme from './theme';
 import { styles } from './styles';
 import { ErrorBoundary } from 'react-error-boundary';
 import GitHubIcon from './assets/icons/github.svg';
+
+// Lazy load the components
+const MetaTab = lazy(() => import('./components/MetaTab'));
+const FavTab = lazy(() => import('./components/FavTab'));
 
 function ErrorFallback({ error }) {
   return (
@@ -39,20 +41,19 @@ function App() {
     }
   `;
 
-  const tabs = [
+  // Memoize tabs array
+  const tabs = useMemo(() => [
     <MetaTab key="meta" />,
     <FavTab key="fav" />
-  ];
+  ], []);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <CssVarsProvider theme={darkTheme} defaultMode="dark">
         <Box sx={styles.rootBox}>
           <Box sx={styles.containerBox}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%'}}>
-              <Typography level="h5">
-                metafav.
-              </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <Typography level="h5">metafav.</Typography>
               <IconButton 
                 aria-label="Vishnu1002 Github Repo"
                 component="a" 
@@ -76,15 +77,19 @@ function App() {
               </TabList>
             </Tabs>
 
-            <Typography level='h2'>Boost traffic and visibility</Typography>
-            <Typography level='h2'>with metadata and favicons</Typography>
+            <Typography sx={{fontSize: '20px', color: 'neutral.300'}}>Boost traffic and visibility with metadata and favicons</Typography>
+            {/* <Typography sx={{fontSize: '30px', color: 'neutral.300'}}></Typography> */}
 
             <Box sx={styles.contentBox}>
               <Box sx={{ display: tabIndex === 0 ? 'block' : 'none', width: '100%' }}>
-                {tabs[0]}
+                <Suspense fallback={<div>Loading...</div>}>
+                  {tabs[0]}
+                </Suspense>
               </Box>
               <Box sx={{ display: tabIndex === 1 ? 'block' : 'none', width: '100%' }}>
-                {tabs[1]}
+                <Suspense fallback={<div>Loading...</div>}>
+                  {tabs[1]}
+                </Suspense>
               </Box>
             </Box>
           </Box>
