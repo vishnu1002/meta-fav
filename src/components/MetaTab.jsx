@@ -52,7 +52,15 @@ const MetaTab = () => {
     event.preventDefault();
     setLoading(true);
 
-    const validationErrors = validateForm(formData);
+    // Validate only the URL field
+    const validationErrors = {};
+    if (!formData.url) {
+      validationErrors.url = "URL is required";
+    } else if (!isValidUrl(formData.url)) {
+      validationErrors.url = "Please enter a valid URL";
+    }
+
+    // If there are validation errors for the URL, set them and stop the process
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setLoading(false);
@@ -60,27 +68,29 @@ const MetaTab = () => {
     }
 
     try {
+      // Proceed with code generation regardless of other input values
       const generatedTags = `
-<meta name="title" content="${formData.title}">
-<meta name="description" content="${formData.description}">
-<meta name="keywords" content="${formData.keywords}">
-<meta name="author" content="${formData.author}">
+        <meta name="title" content="${formData.title || '...'}">
+        <meta name="description" content="${formData.description || '...'}">
+        <meta name="keywords" content="${formData.keywords || '...'}">
+        <meta name="author" content="${formData.author || '...'}">
 
-<meta property="og:type" content="${formData.url}">
-<meta property="og:title" content="${formData.title}">
-<meta property="og:description" content="${formData.description}">
-<meta property="og:url" content="${formData.url}">
-<meta property="og:image" content="${formData.url}.../social-image.png">
-
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:title" content="${formData.title}">
-<meta property="twitter:description" content="${formData.description}">
-<meta property="twitter:url" content="${formData.url}">
-<meta property="twitter:image" content="${formData.url}.../social-image.png">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="${formData.title || '...'}">
+        <meta property="og:description" content="${formData.description || '...'}">
+        <meta property="og:url" content="${formData.url}">
+        <meta property="og:image" content="${formData.url}/social-image.png">
+        
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:title" content="${formData.title || '...'}">
+        <meta property="twitter:description" content="${formData.description || '...'}">
+        <meta property="twitter:url" content="${formData.url}">
+        <meta property="twitter:image" content="${formData.url}/social-image.png">
       `.trim();
 
       setMetaTags(generatedTags);
       setErrors({});
+      setShowCode(true); // Show the code section when tags are generated
     } catch (error) {
       setErrors({ submit: "Failed to generate meta tags" });
     } finally {
@@ -348,6 +358,7 @@ const MetaTab = () => {
               lineHeight: "1.5",
               color: "primary.300",
               bgcolor: "transparent",
+              boxShadow: 'none',
               '&:focus': {
                 outline: 'none',
               },

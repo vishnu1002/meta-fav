@@ -284,7 +284,7 @@ const FavTab = () => {
       <Typography level="h6" sx={{ mb: 2 }}>{title}</Typography>
       <Grid 
         container 
-        spacing={2}
+        spacing={1}
         sx={{ 
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
@@ -404,7 +404,6 @@ const FavTab = () => {
           onDrop={handleDrop}
           onClick={openFileDialog}
           sx={{
-            maxHeight: '100px',
             border: '2px dashed',
             borderColor: dragActive ? 'primary.500' : 'neutral.outlinedBorder',
             borderRadius: 'lg',
@@ -434,23 +433,25 @@ const FavTab = () => {
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center',
+            justifyContent: 'center',
             gap: 1,
             height: '90px',
+            textAlign: 'center',
           }}>
             {selectedFile ? (
               <>
                 <img src={ImageIcon} alt="Image" style={{ width: '50px', height: '50px'}} />
-                <Typography level="body-md">
+                <Typography level="body-md" sx={{ fontSize: { xs: '14px', sm: '16px' } }}>
                   {selectedFile.name}
                 </Typography>
               </>
             ) : (
               <>
                 <img src={UploadIcon} alt="Upload" style={{ width: '48px', height: '48px' }} />
-                <Typography level="body-md">
+                <Typography level="body-md" sx={{ fontSize: { xs: '14px', sm: '16px' }, textAlign: 'center' }}>
                   Drag and drop your image here or click to browse
                 </Typography>
-                <Typography level="body-sm" sx={{ color: 'neutral.500' }}>
+                <Typography level="body-sm" sx={{ color: 'neutral.500', fontSize: { xs: '12px', sm: '14px' } }}>
                   Supports: PNG, JPG, JPEG
                 </Typography>
               </>
@@ -506,8 +507,8 @@ const FavTab = () => {
                 flex: 1,
                 minWidth: '120px',
                 maxWidth: '200px',
-                fontSize: { xs: '14px', sm: '16px' },
-                padding: { xs: '8px', sm: '10px' },
+                fontSize: '13px',
+                padding: '10px'
               }}
               id="get-code-button"
               aria-label="Get code for favicons"
@@ -520,11 +521,11 @@ const FavTab = () => {
               startDecorator={<img src={DownloadIcon} alt="Download" style={{ width: '20px', height: '20px' }} />}
               onClick={downloadZip}
               sx={{
-                flex: 1, // Allow the button to grow
-                minWidth: '120px', // Set a minimum width
-                maxWidth: '200px', // Set a maximum width
-                fontSize: { xs: '14px', sm: '16px' }, // Responsive font size
-                padding: { xs: '8px', sm: '10px' }, // Responsive padding
+                flex: 1,
+                minWidth: '120px',
+                maxWidth: '200px',
+                fontSize: '13px',
+                padding: '10px'
               }}
               id="download-zip-button"
               aria-label="Download ZIP of favicons"
@@ -577,6 +578,7 @@ const FavTab = () => {
                   lineHeight: '1.5',
                   color: 'primary.300',
                   bgcolor: 'transparent',
+                  boxShadow: 'none',
                   '&:focus': {
                     outline: 'none',
                   },
