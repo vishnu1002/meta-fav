@@ -47,6 +47,7 @@ const FavTab = () => {
   const [showCopySuccess, setShowCopySuccess] = useState(false); // For copy success notification
   const [snackbarOpen, setSnackbarOpen] = useState(false); // For Snackbar error notification
   const [copySnackbarOpen, setCopySnackbarOpen] = useState(false); // For Snackbar copy success notification
+  const [imageInfo, setImageInfo] = useState({ resolution: '', fileSize: '' });
 
   const openFileDialog = () => {
     inputRef.current.click();
@@ -84,6 +85,14 @@ const FavTab = () => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setSelectedFile(file);
+      // Create an image element to get the resolution
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const resolution = `${img.width} x ${img.height}`; // Get resolution
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2); // Convert size to MB
+        setImageInfo({ resolution, fileSize: fileSizeMB }); // Store resolution and size
+      };
     } else {
       setError('Please upload an image file');
       setSnackbarOpen(true); // Open Snackbar for error
@@ -244,7 +253,7 @@ const FavTab = () => {
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="theme-color" content="#ffffff"> <!-- Browser theme color -->
 
-<!-- Paste the Generated Meta Tags -->
+<!-- Paste the Generated Meta Tags below -->
 `;
   const copyCode = () => {
     navigator.clipboard.writeText(faviconCode)
@@ -271,31 +280,36 @@ const FavTab = () => {
   };
 
   const ImagePreviewSection = ({ title, images }) => (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4, overflow: 'hidden' }}>
       <Typography level="h6" sx={{ mb: 2 }}>{title}</Typography>
       <Grid 
         container 
-        spacing={3} 
+        spacing={2}
         sx={{ 
           justifyContent: 'flex-start',
-          alignItems: 'flex-end',
-          ml: 0,
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
         }}
       >
         {images.map((img) => (
           <Grid 
             key={img.name} 
-            md="auto" 
-            sm={3} 
-            xs={4}
+            item 
+            xs={6}
+            sm={4}
+            md={3}
             sx={{
               display: 'flex',
-              justifyContent: 'flex-start',
+              justifyContent: 'space-evenly',
+              alignItems: 'stretch',
+              flexDirection: 'column',
+              mb: 2,
             }}
           >
             <Box
               sx={{
                 p: 2,
+                border: '1px solid',
                 borderColor: 'neutral.outlinedBorder',
                 borderRadius: 'md',
                 textAlign: 'center',
@@ -306,21 +320,9 @@ const FavTab = () => {
                 minWidth: '120px',
                 bgcolor: 'background.level1',
                 position: 'relative',
-                '&:hover': {
-                  '& .download-button': {
+                '.download-button': {
                     opacity: 1,
                   },
-                  '& .image-container::after': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(0,0,0,0.1)',
-                    borderRadius: 'sm',
-                  },
-                },
               }}
             >
               <IconButton
@@ -334,9 +336,6 @@ const FavTab = () => {
                   right: 8,
                   opacity: 0,
                   transition: 'opacity 0.2s ease',
-                  '&:hover': {
-                    bgcolor: '',
-                  },
                   zIndex: 2,
                 }}
                 onClick={() => downloadSingleImage(img.blob, img.name)}
@@ -350,7 +349,7 @@ const FavTab = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  height: img.size > 120 ? '120px' : `${img.size}px`,
+                  height: 'auto',
                   width: '100%',
                   position: 'relative',
                 }}
@@ -359,8 +358,8 @@ const FavTab = () => {
                   src={img.url}
                   alt={img.name}
                   style={{
-                    width: img.size > 120 ? '120px' : `${img.size}px`,
-                    height: img.size > 120 ? '120px' : `${img.size}px`,
+                    maxWidth: '100%',
+                    height: 'auto',
                     objectFit: 'contain',
                   }}
                 />
@@ -405,7 +404,7 @@ const FavTab = () => {
           onDrop={handleDrop}
           onClick={openFileDialog}
           sx={{
-            minHeight: '100px',
+            maxHeight: '100px',
             border: '2px dashed',
             borderColor: dragActive ? 'primary.500' : 'neutral.outlinedBorder',
             borderRadius: 'lg',
@@ -435,11 +434,12 @@ const FavTab = () => {
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center',
-            gap: 2,
+            gap: 1,
+            height: '90px',
           }}>
             {selectedFile ? (
               <>
-                <img src={ImageIcon} alt="Image" style={{ width: '48px', height: '48px' }} />
+                <img src={ImageIcon} alt="Image" style={{ width: '50px', height: '50px'}} />
                 <Typography level="body-md">
                   {selectedFile.name}
                 </Typography>
@@ -458,20 +458,26 @@ const FavTab = () => {
           </Box>
         </Box>
 
-        <Button 
-          type="submit" 
-          variant="solid" 
-          color="primary" 
-          fullWidth
-          sx={styles.sharedButton}
-          disabled={processing}
-          startDecorator={processing && <CircularProgress size="sm" />}
-          id="generate-favicons-button"
-          aria-label="Generate Favicons"
-        >
-          <img src={GenerateIcon} alt="Generate" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
-          {processing ? 'Processing...' : 'Generate Favicons'}
-        </Button>
+        {/* Generate Favicons Button*/}
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center',
+          mt: 2
+        }}>
+          <Button 
+            type="submit" 
+            variant="solid" 
+            color="primary" 
+            sx={styles.sharedButton}
+            disabled={processing}
+            startDecorator={processing && <CircularProgress size="sm" />}
+            id="generate-favicons-button"
+            aria-label="Generate Favicons"
+          >
+            <img src={GenerateIcon} alt="Generate" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
+            {processing ? 'Processing...' : 'Generate Favicons'}
+          </Button>
+        </Box>
       </form>
 
       {processedImages && (
@@ -484,33 +490,46 @@ const FavTab = () => {
             Please ensure you edit the manifest.json file to match your website's specific requirements
           </Typography>
 
-          <Box sx={{ 
+          {/* Get Code and Download ZIP Group*/}
+          <Box sx={{
             display: 'flex', 
             gap: 2, 
             justifyContent: 'center',
             mt: 4 
           }}>
             <Button
-              variant="solid"
-              color="primary"
-              startDecorator={<img src={DownloadIcon} alt="Download" style={{ width: '20px', height: '20px' }} />}
-              onClick={downloadZip}
-              sx={styles.sharedButton}
-              id="download-zip-button"
-              aria-label="Download ZIP of favicons"
-            >
-              Download ZIP
-            </Button>
-            <Button
               variant="outlined"
               color="neutral"
               startDecorator={<img src={CodeIcon} alt="Get Code" style={{ width: '20px', height: '20px' }} />}
               onClick={scrollToCode}
-              sx={styles.sharedButton}
+              sx={{
+                flex: 1,
+                minWidth: '120px',
+                maxWidth: '200px',
+                fontSize: { xs: '14px', sm: '16px' },
+                padding: { xs: '8px', sm: '10px' },
+              }}
               id="get-code-button"
               aria-label="Get code for favicons"
             >
               {showCode ? 'Hide Code' : 'Get Code'}
+            </Button>
+            <Button
+              variant="solid"
+              color="primary"
+              startDecorator={<img src={DownloadIcon} alt="Download" style={{ width: '20px', height: '20px' }} />}
+              onClick={downloadZip}
+              sx={{
+                flex: 1, // Allow the button to grow
+                minWidth: '120px', // Set a minimum width
+                maxWidth: '200px', // Set a maximum width
+                fontSize: { xs: '14px', sm: '16px' }, // Responsive font size
+                padding: { xs: '8px', sm: '10px' }, // Responsive padding
+              }}
+              id="download-zip-button"
+              aria-label="Download ZIP of favicons"
+            >
+              Download ZIP
             </Button>
           </Box>
 
@@ -521,7 +540,12 @@ const FavTab = () => {
                 mt: 4, 
                 position: 'relative',
                 maxWidth: '800px',
-                mx: 'auto'
+                mx: 'auto',
+                border: '1px solid neutral.outlinedBorder',
+                borderRadius: 'md',
+                bgcolor: 'background.level1',
+                boxShadow: 'md',
+                p: 2,
               }}
             >
               <IconButton
@@ -546,12 +570,16 @@ const FavTab = () => {
                 value={faviconCode}
                 sx={{
                   margin: 0,
-                  borderStyle: 'none',
+                  border: 'none',
                   width: '100%',
                   height: 'auto',
                   fontSize: '14px',
                   lineHeight: '1.5',
                   color: 'primary.300',
+                  bgcolor: 'transparent',
+                  '&:focus': {
+                    outline: 'none',
+                  },
                 }}
               />
             </Box>

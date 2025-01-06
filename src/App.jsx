@@ -54,9 +54,9 @@ function App() {
           <Box sx={styles.containerBox}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
               <Typography level="h5">metafav.</Typography>
-              <IconButton 
+              <IconButton
                 aria-label="Vishnu1002 Github Repo"
-                component="a" 
+                component="a"
                 href="https://github.com/vishnu1002/meta-fav"
                 target="_blank"
                 rel="noopener noreferrer"

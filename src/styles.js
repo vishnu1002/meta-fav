@@ -34,6 +34,8 @@ export const styles = {
     mt: 2,
     mx: 'auto',
     padding: '0 16px',
+    overflow: 'hidden',
+    boxSizing: 'border-box',
   },
   title: {
     mb: 4,
