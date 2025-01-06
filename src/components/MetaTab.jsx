@@ -13,11 +13,13 @@ import {
 import { styles } from "../styles";
 import GenerateIcon from "../assets/icons/generate.svg";
 import CopyIcon from "../assets/icons/copy.svg";
+import TipIcon from '../assets/icons/tip.svg';
 
 const MetaTab = () => {
   const [metaTags, setMetaTags] = useState("");
-  const [errors, setErrors] = useState({});
+  const [showCode, setShowCode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const [showCopySuccess, setShowCopySuccess] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -70,27 +72,27 @@ const MetaTab = () => {
     try {
       // Proceed with code generation regardless of other input values
       const generatedTags = `
-        <meta name="title" content="${formData.title || '...'}">
-        <meta name="description" content="${formData.description || '...'}">
-        <meta name="keywords" content="${formData.keywords || '...'}">
-        <meta name="author" content="${formData.author || '...'}">
+<meta name="title" content="${formData.title || " "}">
+<meta name="description" content="${formData.description || " "}">
+<meta name="keywords" content="${formData.keywords || " "}">
+<meta name="author" content="${formData.author || " "}">
 
-        <meta property="og:type" content="website">
-        <meta property="og:title" content="${formData.title || '...'}">
-        <meta property="og:description" content="${formData.description || '...'}">
-        <meta property="og:url" content="${formData.url}">
-        <meta property="og:image" content="${formData.url}/social-image.png">
-        
-        <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:title" content="${formData.title || '...'}">
-        <meta property="twitter:description" content="${formData.description || '...'}">
-        <meta property="twitter:url" content="${formData.url}">
-        <meta property="twitter:image" content="${formData.url}/social-image.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${formData.title || " "}">
+<meta property="og:description" content="${formData.description || " "}">
+<meta property="og:url" content="${formData.url}">
+<meta property="og:image" content="${formData.url}social-image.png">
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="${formData.title || " "}">
+<meta property="twitter:description" content="${formData.description || " "}">
+<meta property="twitter:url" content="${formData.url}">
+<meta property="twitter:image" content="${formData.url}social-image.png">
       `.trim();
 
       setMetaTags(generatedTags);
+      setShowCode(true);
       setErrors({});
-      setShowCode(true); // Show the code section when tags are generated
     } catch (error) {
       setErrors({ submit: "Failed to generate meta tags" });
     } finally {
@@ -136,7 +138,7 @@ const MetaTab = () => {
                 name="url"
                 placeholder="https://example.com"
                 error={!!errors.url}
-                sx={{ mb: errors.url ? 0.5 : 2 , color: "primary.300"}}
+                sx={{ mb: errors.url ? 0.5 : 2, color: "primary.300" }}
                 id="url-input"
                 aria-label="URL input"
                 value={formData.url}
@@ -163,7 +165,7 @@ const MetaTab = () => {
                 name="title"
                 placeholder="less than 60 characters"
                 value={formData.title}
-                sx={{color: "primary.300"}}
+                sx={{ color: "primary.300" }}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -190,7 +192,7 @@ const MetaTab = () => {
                 name="author"
                 placeholder="your name"
                 value={formData.author}
-                sx={{color: "primary.300"}}
+                sx={{ color: "primary.300" }}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -216,7 +218,7 @@ const MetaTab = () => {
                 name="description"
                 placeholder="less than 110 characters"
                 value={formData.description}
-                sx={{color: "primary.300"}}
+                sx={{ color: "primary.300" }}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -244,7 +246,7 @@ const MetaTab = () => {
                 name="keywords"
                 placeholder="comma separated"
                 value={formData.keywords}
-                sx={{color: "primary.300"}}
+                sx={{ color: "primary.300" }}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -287,85 +289,110 @@ const MetaTab = () => {
         </form>
       </Box>
 
-      <Typography
-          level="body-sm"
-          sx={{
-            mt: 1,
-            textAlign: "center",
-            color: "neutral.300",
-          }}
-        >
-          Copy the code into your website &lt;head&gt;
-        </Typography>
-
-      {/* Code Display Section */}
       <Box
         sx={{
-          width: "100%",
-          position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
+          mt: 2,
+          p: 2,
+          border: "1px solid",
+          borderColor: "neutral.outlinedBorder",
+          borderRadius: "md",
+          bgcolor: "background.level1",
+          boxShadow: "md",
+          width: 'fit-content',
+          textAlign: "left",
         }}
       >
-        <Box 
-          sx={{ 
-            width: '100%',
-            maxWidth: '800px',
-            position: 'relative',
-            border: '1px solid neutral.outlinedBorder',
-            borderRadius: 'md',
-            bgcolor: 'background.level1',
-            boxShadow: 'md',
-            p: 2,
-            overflow: 'hidden',
+        <img
+          src={TipIcon}
+          alt="Tip"
+          style={{
+            width: '24px',
+            height: '24px',
+            marginRight: '16px',
           }}
-        >
-          <IconButton
-            onClick={handleCopy}
-            variant="soft"
-            color="primary"
-            size="sm"
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              zIndex: 2,
-            }}
-            id="copy-generated-code-button"
-            aria-label="Copy Code"
-          >
-            <img
-              src={CopyIcon}
-              alt="Copy"
-              style={{ width: "20px", height: "20px" }}
-            />
-          </IconButton>
-
-          <Textarea
-            aria-label="Meta Gen Code"
-            id="meta-gen-code"
-            name="meta-gen-code"
-            className="lang-html"
-            readOnly
-            value={metaTags || "<!-- Generated meta tags will appear here -->"}
-            sx={{
-              margin: 0,
-              border: 'none',
-              width: '100%',
-              height: 'auto',
-              fontSize: "14px",
-              lineHeight: "1.5",
-              color: "primary.300",
-              bgcolor: "transparent",
-              boxShadow: 'none',
-              '&:focus': {
-                outline: 'none',
-              },
-            }}
-          />
+        />
+        <Box sx={{ flex: 1 }}>
+          <Typography>
+          • Copy the generated code into the {'<head>'} section
+          </Typography>
+          <Typography>
+          • Ensure that the path to `./social-image.png` is correctly specified
+          </Typography>
         </Box>
       </Box>
+
+      {/* Code Display Section */}
+      {showCode && (
+        <Box
+          sx={{
+            width: "100%",
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: "800px",
+              position: "relative",
+              border: "1px solid neutral.outlinedBorder",
+              borderRadius: "md",
+              bgcolor: "background.level1",
+              boxShadow: "md",
+              p: 2,
+              overflow: "hidden",
+            }}
+          >
+            <IconButton
+              onClick={handleCopy}
+              variant="soft"
+              color="primary"
+              size="sm"
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                zIndex: 2,
+              }}
+              id="copy-generated-code-button"
+              aria-label="Copy Code"
+            >
+              <img
+                src={CopyIcon}
+                alt="Copy"
+                style={{ width: "20px", height: "20px" }}
+              />
+            </IconButton>
+
+            <Textarea
+              aria-label="Meta Gen Code"
+              id="meta-gen-code"
+              name="meta-gen-code"
+              className="lang-html"
+              readOnly
+              value={metaTags}
+              sx={{
+                margin: 0,
+                border: "none",
+                width: "100%",
+                height: "auto",
+                fontSize: "14px",
+                lineHeight: "1.5",
+                color: "primary.300",
+                bgcolor: "transparent",
+                boxShadow: "none",
+                "&:focus": {
+                  outline: "none",
+                },
+              }}
+            />
+          </Box>
+        </Box>
+      )}
 
       {/* Success Notification */}
       <Snackbar
