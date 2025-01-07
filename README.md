@@ -19,8 +19,8 @@
 - **Favicon Generator:** Upload a PNG logo to automatically create favicons in various sizes.
 - **Downloadable ZIP:** Receive all generated files in a single ZIP file, including the manifest.json, favicon images, and meta tag code.
 - **Preview & Customization:** View the generated meta tag code instantly and edit details before download.
-- **Image Processing:** Uploaded image is processed inside the browser only.
-- **Privacy Safety:** The image does not leave the user's device, which is only processed in the user's browser.
+- **Image Processing:** Your uploaded images are processed locally within your browser.
+- **Privacy Guaranteed:** No data is sent to servers—your images stay secure on your device.
 - **Unlimited Usage:** Submit the form and generate code as many times as you need, even with empty input fields.
 
 # 🚀 Deployment
