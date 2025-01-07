@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   Box,
   Typography,
@@ -30,6 +30,8 @@ const MetaTab = () => {
     author: "",
   });
 
+  const codeRef = useRef(null);
+
   const isValidUrl = (url) => {
     try {
       new URL(url);
@@ -40,6 +42,10 @@ const MetaTab = () => {
   };
 
   const sanitizeInput = (input) => input.replace(/[<>]/g, "");
+
+  const scrollToCode = () => {
+    codeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const validateForm = (data) => {
     const errors = {};
@@ -92,6 +98,9 @@ const MetaTab = () => {
 
       setMetaTags(generatedTags);
       setShowCode(true);
+
+      // Use setTimeout to allow the DOM to update before scrolling
+      setTimeout(scrollToCode, 0);
       setErrors({});
     } catch (error) {
       setErrors({ submit: "Failed to generate meta tags" });
@@ -267,7 +276,7 @@ const MetaTab = () => {
             </Grid>
           </Grid>
 
-          {/* Generate Button */}
+          {/* Generate Meta Tags - Button */}
           <Box sx={{ mt: 3, textAlign: "center" }}>
             <Button
               type="submit"
@@ -292,7 +301,7 @@ const MetaTab = () => {
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
+          alignItems: '',
           mt: 2,
           p: 2,
           border: "1px solid",
@@ -326,6 +335,7 @@ const MetaTab = () => {
       {/* Code Display Section */}
       {showCode && (
         <Box
+          ref={codeRef}
           sx={{
             width: "100%",
             position: "relative",

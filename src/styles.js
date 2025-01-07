@@ -43,6 +43,7 @@ export const styles = {
   },
   tabs: {
     mb: 3,
+    mt: 5,
     bgcolor: 'transparent',
     mx: 'auto',
   },
