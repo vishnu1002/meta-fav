@@ -292,7 +292,7 @@ const MetaTab = () => {
       <Box
         sx={{
           display: 'flex',
-          alignItems: '',
+          alignItems: 'center',
           mt: 2,
           p: 2,
           border: "1px solid",
