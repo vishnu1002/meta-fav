@@ -47,15 +47,6 @@ const MetaTab = () => {
     codeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const validateForm = (data) => {
-    const errors = {};
-    if (!data.url) errors.url = "URL is required";
-    else if (!isValidUrl(data.url)) errors.url = "Please enter a valid URL";
-    if (!data.title) errors.title = "Title is required";
-    if (!data.description) errors.description = "Description is required";
-    return errors;
-  };
-
   const handleGenerate = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -209,7 +200,7 @@ const MetaTab = () => {
                   })
                 }
                 id="author-input"
-                aria-label="author input"
+                aria-label="Author input"
               />
             </Grid>
 
@@ -224,7 +215,7 @@ const MetaTab = () => {
               <Textarea
                 id="description-input"
                 aria-label="Description Input"
-                name="description"
+                name="description-input"
                 placeholder="less than 110 characters"
                 value={formData.description}
                 sx={{ color: "primary.300" }}
@@ -252,7 +243,7 @@ const MetaTab = () => {
               <Textarea
                 id="keywords-input"
                 aria-label="Keywords Input"
-                name="keywords"
+                name="keywords-input"
                 placeholder="comma separated"
                 value={formData.keywords}
                 sx={{ color: "primary.300" }}
